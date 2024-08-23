@@ -40,7 +40,7 @@
 
             function preloadImage() {
                 for (var i = 1; i <= frames.maxIndex; i++) {
-                    const imageUrl = `/frames/frame_${i.toString().padStart(4, "0")}.jpeg`;
+                    const imageUrl = `https://interiormaataassets.humbeestudio.xyz/mainsiteassets/desktop/${i.toString().padStart(4, "0")}.webp`;
                    
                     // const imageUrl = `https://interiormaataassets.humbeestudio.xyz/mainsiteassets/desktop/${i.toString().padStart(4, "0")}.webp`;
                     const img = new Image();
@@ -96,13 +96,13 @@
     //                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) // Optional: Custom easing function
     //             });
 
-    //             function raf(time) {
-    //                 lenis.raf(time);
-    //                 requestAnimationFrame(raf);
-    //             }
-    //             requestAnimationFrame(raf);
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
 
-    //             lenis.on('scroll', ScrollTrigger.update);
+                lenis.on('scroll', ScrollTrigger.update);
 
                 gsap.timeline({
                     scrollTrigger: {
