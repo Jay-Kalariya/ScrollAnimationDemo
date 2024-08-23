@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://cdn.tailwindcss.com"></script>
-        <title>3d animation</title>
+        <title>3D Animation with Lenis Scroll</title>
     </head>
     <body>
         <div class="w-full bg-zinc-900">
@@ -14,79 +14,113 @@
                 </div>
             </div>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <!-- GSAP and ScrollTrigger Libraries -->
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <!-- Lenis Smooth Scroll Library -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@latest/dist/lenis.min.js"></script>
 
         <script>
             const canvas = document.querySelector('#canvas');
             const context = canvas.getContext("2d");
-            
-        const frames ={
-            currentIndex: 0,
-            maxIndex: 290
-        }
-        const images=[];
-        let imagesLoaded =0;
-        function preloadImage(){ 
-            for(var i=1; i<= frames.maxIndex ; i++){
-                // https://interiormaataassets.humbeestudio.xyz/mainsiteassets/desktop/0001.webp
-                const imageUrl = `https://interiormaataassets.humbeestudio.xyz/mainsiteassets/desktop/${i.toString().padStart(4 , "0")}.webp`;
-                const img = new Image();
-               img.src=imageUrl;
-               img.onload =function(){
-                imagesLoaded++;
-                if(imagesLoaded === frames.maxIndex){
-                  loadImage(frames.currentIndex);
-                  startAnimation();
-                }
-               }
-               images.push(img);
+
+            const frames = {
+                currentIndex: 0,
+                maxIndex: 290
             }
-        }
-        
-        function loadImage(index){
-            if(index>=0 && index<=frames.maxIndex){
-              const img = images[index];
-              canvas.width =window.innerWidth;
-              canvas.height =window.innerHeight;
+            const images = [];
+            let imagesLoaded = 0;
 
-              const scaleX = canvas.width/img.width;
-              const scaleY = canvas.width/img.height;
-
-              const newWidth= img.width*scaleX;
-              const newHeight= img.height*scaleY;
-
-              const offsetX= (canvas.width - newWidth) /2;
-              const offsetY= (canvas.height - newHeight) /2;
-
-              context.clearRect(0,0 , canvas.width , canvas.height);
-              context.imageSmoothingEnabled= true;
-              context.imageSmoothingQuality ="high";
-              context.drawImage(img, offsetX, offsetY, newWidth, newHeight);
-
-              frames.currentIndex = index;
+            function preloadImage() {
+                for (var i = 1; i <= frames.maxIndex; i++) {
+                    const imageUrl = `/frames/frame_${i.toString().padStart(4, "0")}.jpeg`;
+                   
+                    // const imageUrl = `https://interiormaataassets.humbeestudio.xyz/mainsiteassets/desktop/${i.toString().padStart(4, "0")}.webp`;
+                    const img = new Image();
+                    img.src = imageUrl;
+                    img.onload = function() {
+                        imagesLoaded++;
+                        if (imagesLoaded === frames.maxIndex) {
+                            loadImage(frames.currentIndex);
+                            startAnimation();
+                        }
+                    }
+                    images.push(img);
+                }
             }
-        }
-        
 
-        function startAnimation(){
-            var tl = gsap.timeline({
-                scrollTrigger:{
-                    trigger:'.parent',
-                    start: 'top top',
-                    end: 'bottom bottom',
-                    scrub: true
-                }
-            })
-            tl.to(frames,{
-                currentIndex : frames.maxIndex,
-                onUpdate: function(){
-                    loadImage(Math.floor(frames.currentIndex));
-                }
-            })
-        }
-        preloadImage();
+            function loadImage(index) {
+                if (index >= 0 && index <= frames.maxIndex) {
+                    const img = images[index];
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
 
-    </script>
+                    const scaleX = canvas.width / img.width;
+                    const scaleY = canvas.height / img.height;
+
+                    const newWidth = img.width * scaleX;
+                    const newHeight = img.height * scaleY;
+
+                    const offsetX = (canvas.width - newWidth) / 2;
+                    const offsetY = (canvas.height - newHeight) / 2;
+
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    context.imageSmoothingEnabled = true;
+                    context.imageSmoothingQuality = "high";
+                    context.drawImage(img, offsetX, offsetY, newWidth, newHeight);
+
+                    frames.currentIndex = index;
+                }
+            }
+
+            function startAnimation() {
+    //             const lenis = new Lenis({
+    //                 lerp: 0.07, // Increase for more smoothness (0 - 1)
+    //   smooth: true, // Ensure smooth scrolling is enabled
+    //   direction: 'vertical', // Scrolling direction, use 'horizontal' for horizontal scroll
+    //   gestureDirection: 'vertical', // Direction for touch gestures
+    //   mouseMultiplier: 1, // Adjust how sensitive the scroll reacts to the mouse
+    //   smoothTouch: true, // Enable smooth scroll for touch devices
+    //   touchMultiplier: 2, // Increase this value for a smoother effect on touch devices
+    //             });
+
+    // const lenis = new Lenis({
+    //                 duration: 0,  // Adjust this for a smoother effect
+    //                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) // Optional: Custom easing function
+    //             });
+
+    //             function raf(time) {
+    //                 lenis.raf(time);
+    //                 requestAnimationFrame(raf);
+    //             }
+    //             requestAnimationFrame(raf);
+
+    //             lenis.on('scroll', ScrollTrigger.update);
+
+                gsap.timeline({
+                    scrollTrigger: {
+                        trigger: '.parent',
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: true,
+                        invalidateOnRefresh: true
+                    }
+                }).to(frames, {
+                    currentIndex: frames.maxIndex,
+                    onUpdate: function () {
+                        loadImage(Math.floor(frames.currentIndex));
+                    }
+                });
+            }
+
+            preloadImage();
+        </script>
     </body>
 </html>
